@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation" Version="11.2.2" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
     <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
@@ -19,11 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Extentions\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Modules\Medias\Services\" />
-    <Folder Include="Mapping\" />
-    <Folder Include="Persistence\Repositories\" />
+    <Folder Include="wwwroot\Media\" />
   </ItemGroup>
 
 </Project>

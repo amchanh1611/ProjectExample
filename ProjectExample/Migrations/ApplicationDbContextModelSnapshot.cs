@@ -32,7 +32,7 @@ namespace ProjectExample.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Link")
+                    b.Property<string>("File")
                         .IsRequired()
                         .HasColumnType("varchar(2048)");
 
@@ -61,7 +61,6 @@ namespace ProjectExample.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("MediaId")
