@@ -66,7 +66,7 @@ namespace ProjectExample.Persistence.Repositories
                 {
                     this.schedule = new ScheduleRepositoy(context);
                 }
-                return this.Schedule;
+                return this.schedule;
             }
         }
 

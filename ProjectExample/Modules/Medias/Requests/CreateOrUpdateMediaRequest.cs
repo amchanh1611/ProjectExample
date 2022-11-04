@@ -11,7 +11,7 @@ namespace ProjectExample.Modules.Medias.Requests
     {
         public CreateOrUpdateMediaRequestValidator()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("{propertyname} is required");
+            RuleFor(x => x.Name).NotEmpty().WithMessage("{PropertyName} is required");
         }
     }
 }

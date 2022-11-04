@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectExample.Modules.Medias.Requests;
+using ProjectExample.Modules.Medias.Response;
 using ProjectExample.Modules.Medias.Services;
 using System.Net;
 
@@ -10,18 +11,35 @@ namespace ProjectExample.Controllers
     [Route("api/[controller]")]
     public class MediasController : ControllerBase
     {
-        private readonly IMediaService service;
-        public MediasController(IMediaService service)
+        private readonly IMediaServices mediaServices;
+        public MediasController(IMediaServices mediaServices)
         {
-            this.service = service;
+            this.mediaServices = mediaServices;
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateMediaRequest mediaRequest)
         {
-            bool result = await service.AddAsync(mediaRequest);
+            bool result = await mediaServices.AddAsync(mediaRequest);
             if (result)
                 return Ok();
-            return BadRequest("Create failed");
+            return BadRequest();
         }
+        [HttpGet("ComboboxMedia")]
+        public IActionResult ComboboxMedia()
+        {
+            List<ComboboxMedia> result = mediaServices.ComboboxMedia();
+            if(result!=null)
+                return Ok(result);
+            return BadRequest();
+        }
+        [HttpPut("{mediaId}")]
+        public IActionResult Update([FromRoute] int mediaId, [FromForm] UpdateMediaRequest mediaRequest)
+        {
+            bool result =  mediaServices.Update(mediaId, mediaRequest);
+            if (result)
+                return Ok();
+            return BadRequest();
+        }
+
     }
 }

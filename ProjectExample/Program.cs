@@ -21,14 +21,18 @@ builder.Services.AddDbContextPool<ApplicationDbContext>(option =>
 
 //RepositoryWrapper
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-builder.Services.AddTransient<IMediaService,MediaServices>();
+
+//Services
+builder.Services.AddTransient<IMediaServices,MediaServices>();
+builder.Services.AddTransient<IScheduleServices, ScheduleServices>();
+
 //AutoMapper
 builder.Services.AddAutoMapper(typeof(Profiles));
 
 //Fluent Validation
 builder.Services.AddFluentValidationAutoValidation()
             .AddFluentValidationClientsideAdapters()
-            .AddValidatorsFromAssemblyContaining(typeof(CreateOrUpdateScheduleRequestValidator));
+            .AddValidatorsFromAssemblyContaining(typeof(Program));
 
 var app = builder.Build();
 

@@ -22,71 +22,42 @@ namespace ProjectExample.Modules.Medias.Requests
             this.repository = repository;
 
             //FluentValidation
-            RuleFor(x => x.DateStart).NotEmpty().WithMessage("{propertyname} is required")
+            RuleFor(x => x.DateStart).NotEmpty().WithMessage("{PropertyName} is required")
             .Must(CheckDateExist).WithMessage("There is a schedule during this time");
 
-            RuleFor(x => x.DateEnd).NotEmpty().WithMessage("{propertyname} is required")
-            .LessThan(x=>x.DateStart).WithMessage("{propertyname} greater than {ComparisonProperty}")
-            .Must((_, date) => 
-            {
-                List<Schedule> listSchedule = repository.Schedule.FindAll().ToList();
-                foreach (var schedule in listSchedule)
-                {
-                    if (date >= schedule.DateStart && date <= schedule.DateEnd)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }).WithMessage("There is a schedule during this time");
+            RuleFor(x => x.DateEnd).NotEmpty().WithMessage("{PropertyName} is required")
+            .GreaterThan(x=>x.DateStart).WithMessage("{PropertyName} greater than {ComparisonProperty}")
+            .Must(CheckDateExist).WithMessage("There is a schedule during this time");
 
-            RuleFor(x => x.TimeStart).NotEmpty().WithMessage("{propertyname} is required")
+            RuleFor(x => x.TimeStart).NotEmpty().WithMessage("{PropertyName} is required")
                 .Must(CheckTimeExist).WithMessage("There is a schedule during this time");
 
-            RuleFor(x => x.TimeEnd).NotEmpty().WithMessage("{propertyname} is required")
-               .LessThan(x => x.TimeStart).WithMessage("{propertyname} greater than {ComparisonProperty}")
-               .Must((_, time) =>
-               {
-                   List<Schedule> listSchedule = repository.Schedule.FindAll().ToList();
-                   foreach (var schedule in listSchedule)
-                   {
-                       if (time >= schedule.TimeStart && time <= schedule.TimeEnd)
-                       {
-                           return false;
-                       }
-                   }
-                   return true;
-               }).WithMessage("There is a schedule during this time"); 
+            RuleFor(x => x.TimeEnd).NotEmpty().WithMessage("{PropertyName} is required")
+               .GreaterThan(x => x.TimeStart).WithMessage("{PropertyName} greater than {ComparisonProperty}")
+               .Must(CheckTimeExist).WithMessage("There is a schedule during this time"); 
 
-            RuleFor(x => x.MediaId).NotEmpty().WithMessage("{propertyname} is required")
+            RuleFor(x => x.MediaId).NotEmpty().WithMessage("{PropertyName} is required")
                 .Must((_, media) => 
                 {
-                    Media mediaResponse = this.repository.Media.FindByCondition(x=>x.Id.Equals(media)).First();
+                    Media? mediaResponse = this.repository.Media.FindByCondition(x=>x.Id==media).FirstOrDefault();
                     if (mediaResponse != null)
                         return true;
                     return false;
                 }).WithMessage("Media does not exist");
-                //check media co ton tai k
-                //bat loi thoi gian trung
         }
-        private bool CheckDateExist(DateTime date)
+        private bool CheckDateExist(DateTime? date)
         {
-            List<Schedule> listSchedule = repository.Schedule.FindAll().ToList();
-            foreach(var schedule in listSchedule)
-            {
-                if(date>=schedule.DateStart&&date<=schedule.DateEnd)
-                {
-                    return false;
-                }
-            }
+            List<Schedule> listSchedule = repository.Schedule.FindByCondition(
+                x=>(x.DateStart<=date.Value&&x.DateEnd<=date.Value)).ToList();
+            
             return true;
         }
-        private bool CheckTimeExist(TimeSpan time)
+        private bool CheckTimeExist(TimeSpan? time)
         {
             List<Schedule> listSchedule = repository.Schedule.FindAll().ToList();
             foreach (var schedule in listSchedule)
             {
-                if (time >= schedule.TimeStart && time <= schedule.TimeEnd)
+                if (time > schedule.TimeStart && time < schedule.TimeEnd)
                 {
                     return false;
                 }
