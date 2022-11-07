@@ -15,12 +15,8 @@ namespace ProjectExample.Modules.Medias.Requests
     }
     public class CreateOrUpdateScheduleRequestValidator : AbstractValidator<CreateOrUpdateScheduleRequest>
     {
-        private readonly IRepositoryWrapper repository;
         public CreateOrUpdateScheduleRequestValidator(IRepositoryWrapper repository)
         {
-            //Inject Repository
-            this.repository = repository;
-
             //FluentValidation
             RuleFor(x => x.DateStart).NotEmpty().WithMessage("{PropertyName} is required");
 
@@ -32,51 +28,30 @@ namespace ProjectExample.Modules.Medias.Requests
             RuleFor(x => x.TimeEnd).NotEmpty().WithMessage("{PropertyName} is required")
                .GreaterThan(x => x.TimeStart).WithMessage("{PropertyName} greater than {ComparisonProperty}");
 
-            RuleFor(x => x).Must((x) =>
+            RuleFor(x => x).Must((request) =>
             {
-                List<Schedule> listSchedule = repository.Schedule.FindByCondition(
-               z => (z.DateStart <= x.DateStart && z.DateEnd >= x.DateStart ||
-               z.DateStart <= x.DateEnd && z.DateEnd >= x.DateEnd)).ToList();
+                return repository.Schedule.FindByCondition(z =>
+                    (
+                        z.DateStart <= request.DateStart && z.DateEnd >= request.DateStart 
+                        || z.DateStart <= request.DateEnd && z.DateEnd >= request.DateEnd
+                    )
+                    &&
+                    (
+                        z.TimeStart <= request.TimeStart && z.TimeEnd >= request.TimeStart
+                        ||z.TimeStart <= request.TimeEnd && z.TimeEnd >= request.TimeEnd
+                    )
+                ).Count() == 0;
 
-                if (listSchedule.Count == 0)
-                    return true;
-
-                foreach (Schedule schedule in listSchedule)
-                {
-                    if (schedule.TimeStart <= x.TimeStart && schedule.TimeEnd >= x.TimeStart ||
-                    schedule.TimeStart <= x.TimeEnd && schedule.TimeEnd >= x.TimeEnd)
-                        return false;
-                }
-                return true;
             }).WithMessage("There is a schedule during this time");
 
             RuleFor(x => x.MediaId).NotEmpty().WithMessage("{PropertyName} is required")
                 .Must((_, media) => 
                 {
-                    Media? mediaResponse = this.repository.Media.FindByCondition(x=>x.Id==media).FirstOrDefault();
+                    Media? mediaResponse = repository.Media.FindByCondition(x=>x.Id==media).FirstOrDefault();
                     if (mediaResponse != null)
                         return true;
                     return false;
                 }).WithMessage("Media does not exist");
         }
-        //private bool CheckDateExist(DateTime? date)
-        //{
-        //    List<Schedule> listSchedule = repository.Schedule.FindByCondition(
-        //        x=>(x.DateStart<=date.Value&&x.DateEnd<=date.Value)).ToList();
-            
-        //    return true;
-        //}
-        //private bool CheckTimeExist(TimeSpan? time)
-        //{
-        //    List<Schedule> listSchedule = repository.Schedule.FindAll().ToList();
-        //    foreach (var schedule in listSchedule)
-        //    {
-        //        if (time > schedule.TimeStart && time < schedule.TimeEnd)
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    return true;
-        //}
     }
 }

@@ -16,6 +16,8 @@ namespace ProjectExample.Mapping
 
             //Schedule
             CreateMap<CreateScheduleRequest, Schedule>();
+            CreateMap<UpdateScheduleRequest, Schedule>();
+            CreateMap<Schedule, ScheduleInDayResponse>();
         }
     }
 }
