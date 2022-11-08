@@ -2,7 +2,7 @@
 
 namespace ProjectExample.Modules.Medias.Requests
 {
-    public class CreateOrUpdateMediaRequest
+    public abstract class CreateOrUpdateMediaRequest
     {
         public string? Name { get; set; }
 

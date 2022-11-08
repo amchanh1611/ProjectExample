@@ -1,8 +1,9 @@
-﻿namespace ProjectExample.Modules.Medias.Response
+﻿using ProjectExample.Modules.Medias.Entities;
+
+namespace ProjectExample.Modules.Medias.Response
 {
-    public class SearchOrPagingScheduleResponse
+    public class SearchOrPagingScheduleResponse : PageInfo
     {
-        List<ScheduleResponse> Schedules { get; set; } = default!;
-        PageInfo PageInfo { get; set; }
+        public List<Schedule> Schedules { get; set; } = default!;
     }
 }

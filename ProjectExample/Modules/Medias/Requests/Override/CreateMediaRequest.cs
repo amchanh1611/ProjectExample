@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using ProjectExample.Modules.Medias.Entities;
 
 namespace ProjectExample.Modules.Medias.Requests
 {
@@ -7,14 +6,13 @@ namespace ProjectExample.Modules.Medias.Requests
     {
         public IFormFile? FormFile { get; set; }
     }
+
     public class CreateMediaRequestValidator : AbstractValidator<CreateMediaRequest>
     {
         public CreateMediaRequestValidator()
         {
             RuleFor(x => x).SetValidator(new CreateOrUpdateMediaRequestValidator());
-            RuleFor(x => x.FormFile).NotEmpty().WithMessage("{property} is required");     
-            
+            RuleFor(x => x.FormFile).NotEmpty().WithMessage("{property} is required");
         }
     }
-
 }

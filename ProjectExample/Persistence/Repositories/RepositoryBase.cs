@@ -18,7 +18,6 @@ namespace ProjectExample.Persistence.Repositories
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) 
             => context.Set<T>().Where(expression).AsNoTracking();
-
         public void Update(T entity) => context.Set<T>().Update(entity);
     }
     public class MediaRepository : RepositoryBase<Media>, IMediaRepository

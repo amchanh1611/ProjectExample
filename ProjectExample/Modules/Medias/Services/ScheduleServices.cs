@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ProjectExample.Common.Extentions;
 using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Modules.Medias.Requests;
 using ProjectExample.Modules.Medias.Response;
 using ProjectExample.Persistence.Contexts;
+using ProjectExample.Persistence.PaggingBase;
 using ProjectExample.Persistence.Repositories;
 
 namespace ProjectExample.Modules.Medias.Services
@@ -13,7 +15,8 @@ namespace ProjectExample.Modules.Medias.Services
         bool Create(CreateScheduleRequest scheduleRequest);
         bool Update(int id, UpdateScheduleRequest scheduleRequest);
         List<ScheduleInDayResponse> GetScheduleInDay(ScheduleInDayRequest date);
-        SearchOrPagingScheduleResponse Search(SearchOrPagingScheduleRequest request);
+        SearchOrPagingScheduleResponse Search(SearchOrPaggingScheduleRequest request);
+        SearchOrPagingScheduleResponse Pagging(SearchOrPaggingScheduleRequest request);
     }
     public class ScheduleServices : IScheduleServices
     {
@@ -49,14 +52,26 @@ namespace ProjectExample.Modules.Medias.Services
             return mapper.Map<List<Schedule>,List<ScheduleInDayResponse>>(schedule);
         }
 
-        public SearchOrPagingScheduleResponse Search(SearchOrPagingScheduleRequest request)
+        public SearchOrPagingScheduleResponse Search(SearchOrPaggingScheduleRequest request)
         {
-            List<Schedule> result = context.schedules.Where(x => x.Description.Contains(request.InfoSearch)).ToList();
-            //List<Schedule> result = repository.Schedule.FindByCondition
-            //    (
-            //        x => x.Description.Contains(request.InfoSearch)
-            //    ).ToList();
-            return new SearchOrPagingScheduleResponse();
+            PaggingBase<Schedule> schedules = PaggingBase<Schedule>.ToPagedList(repository.Schedule.FindAll(), request.CurrentPage, request.PageSize);
+             
+            SearchOrPagingScheduleResponse response = mapper.Map<SearchOrPagingScheduleResponse>(schedules);
+
+            response.Schedules = schedules;
+
+            return response;
+        }
+
+        public SearchOrPagingScheduleResponse Pagging(SearchOrPaggingScheduleRequest request)
+        {
+            List<Schedule> schedules = repository.Schedule.FindAll().ToList();
+            List<Schedule> shedulePagging = schedules.OrderBy(x => x.Description).Skip((request.CurrentPage - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+            SearchOrPagingScheduleResponse response = Helper.MapPageRequestToPageInfo(request, schedules);
+
+           
+            return response;
         }
     }
 }

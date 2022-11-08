@@ -4,7 +4,7 @@ using ProjectExample.Persistence.Repositories;
 
 namespace ProjectExample.Modules.Medias.Requests
 {
-    public class CreateOrUpdateScheduleRequest
+    public abstract class CreateOrUpdateScheduleRequest
     {
         public DateTime? DateStart { get; set; }
         public DateTime? DateEnd { get; set; }

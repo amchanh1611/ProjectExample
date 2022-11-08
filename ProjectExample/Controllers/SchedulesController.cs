@@ -40,9 +40,18 @@ namespace ProjectExample.Controllers
             return BadRequest("No schedule for today");
         }
         [HttpGet("Search")]
-        public IActionResult Search(SearchOrPagingScheduleRequest request)
+        public IActionResult Search(SearchOrPaggingScheduleRequest request)
         {
             SearchOrPagingScheduleResponse result = scheduleServices.Search(request);
+            if (result != null)
+                return Ok(result);
+            return BadRequest();
+
+        }
+        [HttpGet("Pagging")]
+        public IActionResult Pagging(SearchOrPaggingScheduleRequest request)
+        {
+            SearchOrPagingScheduleResponse result = scheduleServices.Pagging(request);
             if (result != null)
                 return Ok(result);
             return BadRequest();
