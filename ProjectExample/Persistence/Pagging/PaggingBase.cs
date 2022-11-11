@@ -1,30 +1,40 @@
 ﻿namespace ProjectExample.Persistence.PaggingBase
 {
-    public class PaggingBase<T> : List<T>
+    public class PaggingBase<T> 
     {
+        public static PaggingResponse<T> ToPagedList(IQueryable<T> source, int current, int pageSize)
+        {
+            int count = source.Count();
+            List<T> items = source.Skip((current - 1) * pageSize).Take(pageSize).ToList();
+            return new PaggingResponse<T>(items, new PageInfo(count, pageSize, current));
+        }
+    }
+    public class PageInfo
+    {
+        public PageInfo(int totalCount, int pageSize,int current)
+        {
+            TotalCount = totalCount;
+            PageSize = pageSize;
+            Current= current;
+            TotalPages=(int)Math.Ceiling(totalCount / (double)pageSize);
+        }
         public int TotalCount { get; private set; }
         public int TotalPages { get; private set; }
         public int PageSize { get; set; }
         public int Current { get; set; }
-        public int? NextPage => Current == TotalPages ? null : Current + 1;
-        public int? PreviousPage => Current == 1 ? null : Current - 1;
-        public bool HasNext => Current < TotalPages;
-        public bool HasPrevious => Current > 1;
-
-        public PaggingBase(List<T> items, int count, int current, int pageSize)
+        public int? NextPage => Current >= TotalPages ? null : Current + 1;
+        public int? PreviousPage => Current <= 1 ? null : Current - 1;
+        public bool HasNext => NextPage != null;
+        public bool HasPrevious => PreviousPage != null;
+    }
+    public class PaggingResponse<T>
+    {
+        public PaggingResponse(List<T> data, PageInfo pageInfo)
         {
-            TotalCount = count;
-            PageSize = pageSize;
-            Current = current;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            AddRange(items);
+            Data = data;
+            PageInfo = pageInfo;
         }
-
-        public static PaggingBase<T> ToPagedList(IQueryable<T> source, int current, int pageSize)
-        {
-            var count = source.Count();
-            var items = source.Skip((current - 1) * pageSize).Take(pageSize).ToList();
-            return new PaggingBase<T>(items, count, current, pageSize);
-        }
+        public List<T> Data { get; set; } = default!;
+        public PageInfo PageInfo { get; set; } = default!;
     }
 }

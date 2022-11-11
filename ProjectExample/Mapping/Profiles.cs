@@ -22,7 +22,6 @@ namespace ProjectExample.Mapping
             CreateMap<UpdateScheduleRequest, Schedule>();
             CreateMap<Schedule, ScheduleInDayResponse>();
             CreateMap<Schedule, ScheduleResponse>();
-            CreateMap<PaggingBase<Schedule>, SearchOrPagingScheduleResponse>();
         }
     }
 }

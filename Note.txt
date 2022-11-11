@@ -1,0 +1,13 @@
+cách triển khai theo Generic object
+xem filter
+search
+sort 
+trên code maze
+
+access token 
+refresh token
+
+sửa connectionString
+
+httpclient()
+

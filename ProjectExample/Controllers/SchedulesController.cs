@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Modules.Medias.Requests;
 using ProjectExample.Modules.Medias.Response;
 using ProjectExample.Modules.Medias.Services;
+using ProjectExample.Persistence.PaggingBase;
 
 namespace ProjectExample.Controllers
 {
@@ -40,18 +42,9 @@ namespace ProjectExample.Controllers
             return BadRequest("No schedule for today");
         }
         [HttpGet("Search")]
-        public IActionResult Search(SearchOrPaggingScheduleRequest request)
+        public IActionResult Search([FromQuery] GetScheduleRequest request)
         {
-            SearchOrPagingScheduleResponse result = scheduleServices.Search(request);
-            if (result != null)
-                return Ok(result);
-            return BadRequest();
-
-        }
-        [HttpGet("Pagging")]
-        public IActionResult Pagging(SearchOrPaggingScheduleRequest request)
-        {
-            SearchOrPagingScheduleResponse result = scheduleServices.Pagging(request);
+            PaggingResponse<Schedule> result = scheduleServices.Search(request);
             if (result != null)
                 return Ok(result);
             return BadRequest();

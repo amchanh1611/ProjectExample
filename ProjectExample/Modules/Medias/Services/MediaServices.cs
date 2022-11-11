@@ -15,7 +15,7 @@ namespace ProjectExample.Modules.Medias.Services
         Task<bool> AddAsync(CreateMediaRequest mediaRequest);
         List<ComboboxMedia> ComboboxMedia();
         bool Update(int id, UpdateMediaRequest mediaRequest);
-        SearchOrPaggingMediaResponse Search(SearchOrPaggingMediaRequest request);
+        PaggingResponse<Media> Search(GetMediaRequest request);
         
     }
 
@@ -45,13 +45,12 @@ namespace ProjectExample.Modules.Medias.Services
             return mapper.Map<List<Media>,List<ComboboxMedia>>(media);
         }
 
-        public SearchOrPaggingMediaResponse Search(SearchOrPaggingMediaRequest request)
+        public PaggingResponse<Media> Search(GetMediaRequest request)
         {
-            PaggingBase<Media> medias = PaggingBase<Media>.ToPagedList(repository.Media.FindAll(), request.CurrentPage, request.PageSize);
+            PaggingResponse<Media> medias = PaggingBase<Media>.ToPagedList(repository.Media.FindAll(), request.CurrentPage, request.PageSize);
 
-            SearchOrPaggingMediaResponse response = mapper.Map<SearchOrPaggingMediaResponse>(medias);
-            response.Medias = medias;
-            return response;
+           
+            return new PaggingResponse<Media>(medias.Data,medias.PageInfo);
         }
 
         public bool Update(int id, UpdateMediaRequest mediaRequest)

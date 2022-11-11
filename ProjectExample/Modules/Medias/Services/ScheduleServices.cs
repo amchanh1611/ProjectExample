@@ -15,8 +15,7 @@ namespace ProjectExample.Modules.Medias.Services
         bool Create(CreateScheduleRequest scheduleRequest);
         bool Update(int id, UpdateScheduleRequest scheduleRequest);
         List<ScheduleInDayResponse> GetScheduleInDay(ScheduleInDayRequest date);
-        SearchOrPagingScheduleResponse Search(SearchOrPaggingScheduleRequest request);
-        SearchOrPagingScheduleResponse Pagging(SearchOrPaggingScheduleRequest request);
+        PaggingResponse<Schedule> Search(GetScheduleRequest request);
     }
     public class ScheduleServices : IScheduleServices
     {
@@ -52,26 +51,10 @@ namespace ProjectExample.Modules.Medias.Services
             return mapper.Map<List<Schedule>,List<ScheduleInDayResponse>>(schedule);
         }
 
-        public SearchOrPagingScheduleResponse Search(SearchOrPaggingScheduleRequest request)
+        public PaggingResponse<Schedule> Search(GetScheduleRequest request)
         {
-            PaggingBase<Schedule> schedules = PaggingBase<Schedule>.ToPagedList(repository.Schedule.FindAll(), request.CurrentPage, request.PageSize);
-             
-            SearchOrPagingScheduleResponse response = mapper.Map<SearchOrPagingScheduleResponse>(schedules);
-
-            response.Schedules = schedules;
-
-            return response;
-        }
-
-        public SearchOrPagingScheduleResponse Pagging(SearchOrPaggingScheduleRequest request)
-        {
-            List<Schedule> schedules = repository.Schedule.FindAll().ToList();
-            List<Schedule> shedulePagging = schedules.OrderBy(x => x.Description).Skip((request.CurrentPage - 1) * request.PageSize).Take(request.PageSize).ToList();
-
-            SearchOrPagingScheduleResponse response = Helper.MapPageRequestToPageInfo(request, schedules);
-
-           
-            return response;
+            PaggingResponse<Schedule> schedules = PaggingBase<Schedule>.ToPagedList(repository.Schedule.FindAll(), request.CurrentPage, request.PageSize);
+            return new PaggingResponse<Schedule>(schedules.Data, schedules.PageInfo);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ProjectExample.Modules.Medias.Requests.Override
 {
-    public class SearchOrPaggingMediaRequest : SearchOrPaggingRequest
+    public class GetMediaRequest : GetRequest
     {
     }
 }

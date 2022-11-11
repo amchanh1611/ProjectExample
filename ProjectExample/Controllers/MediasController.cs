@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Modules.Medias.Requests;
 using ProjectExample.Modules.Medias.Requests.Override;
 using ProjectExample.Modules.Medias.Response;
 using ProjectExample.Modules.Medias.Response.Override;
 using ProjectExample.Modules.Medias.Services;
+using ProjectExample.Persistence.PaggingBase;
 
 namespace ProjectExample.Controllers
 {
@@ -46,9 +48,9 @@ namespace ProjectExample.Controllers
         }
 
         [HttpGet("Search")]
-        public IActionResult Search([FromBody] SearchOrPaggingMediaRequest request)
+        public IActionResult Search([FromQuery] GetMediaRequest request)
         {
-            SearchOrPaggingMediaResponse result = mediaServices.Search(request);
+            PaggingResponse<Media> result = mediaServices.Search(request);
             if (result != null)
                 return Ok(result);
             return BadRequest();
