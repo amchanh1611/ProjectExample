@@ -1,14 +1,25 @@
 Cung cấp 1 class để gửi HttpRequest và nhận HttpResponse từ 1 tài nguyên được xác thực bằng uri 
 
 1 số method
-CancelPendingRequests hủy tất cả các request đang chờ xử lí trong phiên bản hiện tại
-DeleteAsync          : send 1 Delete request đến uri được chỉ định
-GetAsync             : send 1 Get request đến uri được chỉ định
-GetByteArrayAsync    : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 mảng byte
-GetStreamAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 stream
-GetStringAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 chuỗi kí tự
-PostAsync
-PutAsync
+ - CancelPendingRequests hủy tất cả các request đang chờ xử lí trong phiên bản hiện tại
+ - DeleteAsync          : send 1 Delete request đến uri được chỉ định
+ - GetAsync             : send 1 Get request đến uri được chỉ định
+ - PostAsync
+ - PutAsync
 
 => trả về 1 HttpResponseMessage
-SendAsync            : Sends an HTTP request with the specified request.
+
+ - GetByteArrayAsync    : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 mảng byte
+ - GetStreamAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 stream
+ - GetStringAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 chuỗi kí tự
+
+ - SendAsync            : Sends an HTTP request with the specified request.
+
+HttpResponseMessage kiểu trả về khi sử dụng các phưng thức GET/POST/PUT/DELETE async 
+
+1 số thuộc tính
+ - StatusCode : Thuộc tính có kiểu enum HttpStatusCode cho biết mã trạng thái của kết quả
+ - ReasonPhrase : Đoạn text, mô tả thông tin cho mã trạng thái như OK, MovedPermanently ...
+ - Headers : Thuộc tính kiểu HttpResponseHeaders chứa tập hợp các header 
+ - Content : Thuộc tính kiểu HttpContent, trong đó chứa nội dung (content) và 
+các header liên quan đến content nếu có (Headers như Content-Type, Content-Length ...)
