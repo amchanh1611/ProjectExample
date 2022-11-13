@@ -1,0 +1,14 @@
+Cung cấp 1 class để gửi HttpRequest và nhận HttpResponse từ 1 tài nguyên được xác thực bằng uri 
+
+1 số method
+CancelPendingRequests hủy tất cả các request đang chờ xử lí trong phiên bản hiện tại
+DeleteAsync          : send 1 Delete request đến uri được chỉ định
+GetAsync             : send 1 Get request đến uri được chỉ định
+GetByteArrayAsync    : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 mảng byte
+GetStreamAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 stream
+GetStringAsync       : send 1 Get request đến uri được chỉ định và return về 1 response body là 1 chuỗi kí tự
+PostAsync
+PutAsync
+
+=> trả về 1 HttpResponseMessage
+SendAsync            : Sends an HTTP request with the specified request.
