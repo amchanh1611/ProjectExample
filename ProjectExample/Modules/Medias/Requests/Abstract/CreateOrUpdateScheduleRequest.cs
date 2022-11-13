@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Persistence.Repositories;
 
 namespace ProjectExample.Modules.Medias.Requests
@@ -13,10 +12,12 @@ namespace ProjectExample.Modules.Medias.Requests
         public string? Description { get; set; }
         public int? MediaId { get; set; }
     }
+
     public class CreateOrUpdateScheduleRequestValidator : AbstractValidator<CreateOrUpdateScheduleRequest>
     {
         public CreateOrUpdateScheduleRequestValidator(IRepositoryWrapper repository)
         {
+
             //FluentValidation
             RuleFor(x => x.DateStart).NotEmpty().WithMessage("{PropertyName} is required");
 
@@ -32,25 +33,21 @@ namespace ProjectExample.Modules.Medias.Requests
             {
                 return repository.Schedule.FindByCondition(z =>
                     (
-                        z.DateStart <= request.DateStart && z.DateEnd >= request.DateStart 
+                        z.DateStart <= request.DateStart && z.DateEnd >= request.DateStart
                         || z.DateStart <= request.DateEnd && z.DateEnd >= request.DateEnd
                     )
                     &&
                     (
                         z.TimeStart <= request.TimeStart && z.TimeEnd >= request.TimeStart
-                        ||z.TimeStart <= request.TimeEnd && z.TimeEnd >= request.TimeEnd
+                        || z.TimeStart <= request.TimeEnd && z.TimeEnd >= request.TimeEnd
                     )
                 ).Count() == 0;
-
             }).WithMessage("There is a schedule during this time");
 
             RuleFor(x => x.MediaId).NotEmpty().WithMessage("{PropertyName} is required")
-                .Must((_, media) => 
+                .Must((_, media) =>
                 {
-                    Media? mediaResponse = repository.Media.FindByCondition(x=>x.Id==media).FirstOrDefault();
-                    if (mediaResponse != null)
-                        return true;
-                    return false;
+                    return repository.Media.FindByCondition(x => x.Id == media).Count() != 0;
                 }).WithMessage("Media does not exist");
         }
     }

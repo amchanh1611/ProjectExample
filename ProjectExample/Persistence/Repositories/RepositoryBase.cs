@@ -2,38 +2,44 @@
 using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Persistence.Contexts;
 using System.Linq.Expressions;
+
 namespace ProjectExample.Persistence.Repositories
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         private readonly ApplicationDbContext context;
+
         public RepositoryBase(ApplicationDbContext context)
         {
             this.context = context;
         }
+
         public void Create(T entity) => context.Set<T>().Add(entity);
+
         public void Delete(T entity) => context.Set<T>().Remove(entity);
 
         public IQueryable<T> FindAll() => context.Set<T>().AsNoTracking();
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) 
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
             => context.Set<T>().Where(expression).AsNoTracking();
+
         public void Update(T entity) => context.Set<T>().Update(entity);
     }
+
     public class MediaRepository : RepositoryBase<Media>, IMediaRepository
     {
         public MediaRepository(ApplicationDbContext context) : base(context)
         {
-
         }
     }
-    public class ScheduleRepositoy : RepositoryBase<Schedule>,IScheduleRepository
+
+    public class ScheduleRepositoy : RepositoryBase<Schedule>, IScheduleRepository
     {
         public ScheduleRepositoy(ApplicationDbContext context) : base(context)
         {
-
         }
     }
+
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private ApplicationDbContext context;
@@ -61,7 +67,7 @@ namespace ProjectExample.Persistence.Repositories
         {
             get
             {
-                if(this.schedule==null)
+                if (this.schedule == null)
                 {
                     this.schedule = new ScheduleRepositoy(context);
                 }

@@ -47,7 +47,7 @@ namespace ProjectExample.Modules.Medias.Services
 
         public PaggingResponse<Media> Search(GetMediaRequest request)
         {
-            PaggingResponse<Media> medias = PaggingBase<Media>.ToPagedList(repository.Media.FindAll(), request.CurrentPage, request.PageSize);
+            PaggingResponse<Media> medias = PaggingBase<Media>.ApplyPaging(repository.Media.FindAll(), request.CurrentPage, request.PageSize);
 
            
             return new PaggingResponse<Media>(medias.Data,medias.PageInfo);

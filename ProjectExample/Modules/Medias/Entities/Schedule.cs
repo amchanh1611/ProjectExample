@@ -9,7 +9,7 @@ namespace ProjectExample.Modules.Medias.Entities
         public DateTime DateEnd { get; set; }
         public TimeSpan TimeStart { get; set; }
         public TimeSpan TimeEnd { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = default!;
         public int MediaId { get; set; }
         public Media Media { get; set; } = default!;
     }

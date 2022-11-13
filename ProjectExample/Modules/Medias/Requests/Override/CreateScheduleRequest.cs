@@ -6,6 +6,7 @@ namespace ProjectExample.Modules.Medias.Requests
     public class CreateScheduleRequest : CreateOrUpdateScheduleRequest
     {
     }
+
     public class CreateScheduleRequestValidator : AbstractValidator<CreateScheduleRequest>
     {
         public CreateScheduleRequestValidator(IRepositoryWrapper repository)

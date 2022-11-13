@@ -1,13 +1,16 @@
-cách triển khai theo Generic object
-xem filter
-search
-sort 
+cách triển khai theo Generic object V
+xem filter V
+search V
+sort V
 trên code maze
 
 access token 
 refresh token
 
-sửa connectionString
+sửa connectionString V
 
 httpclient()
 
+
+(? truong hop update schedule neu truyen vao thoi gian da ton tai nhung la chinh no thi cung dinh validate ?)
+(? luc fillter cung phai set validator ?)
