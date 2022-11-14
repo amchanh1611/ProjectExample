@@ -8,8 +8,6 @@ using ProjectExample.Persistence.Repositories;
 using ProjectExample.Persistence.SearchBase;
 using ProjectExample.Persistence.Sort;
 using System.Linq.Dynamic.Core;
-using System.Reflection;
-using System.Text;
 
 namespace ProjectExample.Modules.Medias.Services
 {
@@ -62,7 +60,7 @@ namespace ProjectExample.Modules.Medias.Services
         public PaggingResponse<Schedule> GetSchedules(GetScheduleRequest request)
         {
             IQueryable<Schedule> schedules = repository.Schedule.FindByCondition(x =>
-                ( request.MediaId == null
+                (request.MediaId == null
                  ||
                  x.MediaId == request.MediaId
                 )
@@ -78,55 +76,14 @@ namespace ProjectExample.Modules.Medias.Services
                     )
                 )
             );
-            if(request.InfoSearch != null)
+            if (request.InfoSearch != null)
             {
-                schedules = SearchingBase<Schedule>.ApplySearch(schedules,request.InfoSearch);
+                schedules = SearchingBase<Schedule>.ApplySearch(schedules, request.InfoSearch);
             }
 
             schedules = SortingBase<Schedule>.ApplySort(schedules, request.OrderBy);
-           
+
             return PaggingBase<Schedule>.ApplyPaging(schedules, request.CurrentPage, request.PageSize);
-        }
-        private void ApplySort(ref IQueryable<Schedule> schedules, string orderByQueryString)
-        {
-            if (!schedules.Any())
-                return;
-
-            if (string.IsNullOrWhiteSpace(orderByQueryString))
-            {
-                schedules = schedules.OrderBy(x => x.Description);
-                return;
-            }
-
-            string[] orderParams = orderByQueryString.Trim().Split(',');
-            PropertyInfo[] propertyInfos = typeof(Schedule).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            StringBuilder orderQueryBuilder = new StringBuilder();
-
-            foreach (var param in orderParams)
-            {
-                if (string.IsNullOrWhiteSpace(param))
-                    continue;
-
-                string propertyFromQueryName = param.Split(" ")[0];
-                PropertyInfo objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
-
-                if (objectProperty == null)
-                    continue;
-
-                string sortingOrder = param.EndsWith(" desc") ? "descending" : "ascending";
-
-                orderQueryBuilder.Append($"{objectProperty.Name.ToString()} {sortingOrder}, ");
-            }
-
-            string orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
-
-            if (string.IsNullOrWhiteSpace(orderQuery))
-            {
-                schedules = schedules.OrderBy(x => x.Description);
-                return;
-            }
-
-            schedules = schedules.OrderBy(orderQuery);
         }
     }
 }

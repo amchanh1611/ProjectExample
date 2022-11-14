@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core;
+﻿using System.Collections;
+using System.Linq.Dynamic.Core;
 using System.Reflection;
 using System.Text;
 
@@ -24,15 +25,17 @@ public class SortingBase<T>
                 continue;
 
             string propertyNameFromQuery = param.Trim().Split(" ")[0];
-            PropertyInfo propertyNameFromSourc = propertyInfos.FirstOrDefault(x => x.Name.Equals(propertyNameFromQuery, StringComparison.OrdinalIgnoreCase));
+            PropertyInfo propertyFromSourc = propertyInfos.FirstOrDefault(x => x.Name.Equals(propertyNameFromQuery, StringComparison.OrdinalIgnoreCase));
 
-            if (propertyNameFromSourc == null)
+            if (propertyFromSourc is null)
                 continue;
-            if (propertyNameFromSourc.PropertyType == typeof(ICollection<>))
+
+            if (propertyFromSourc.PropertyType != typeof(string) && propertyFromSourc.PropertyType.GetInterface(nameof(IEnumerable)) != null)
                 continue;
+
             string sortingRule = param.EndsWith(" desc") ? "descending" : "ascending";
 
-            querySortBuilder = querySortBuilder.Append($"{propertyNameFromSourc.Name.ToString()} {sortingRule}, ");
+            querySortBuilder = querySortBuilder.Append($"{propertyFromSourc.Name.ToString()} {sortingRule}, ");
         }
 
         string querySort = querySortBuilder.ToString().TrimEnd(' ', ','); 

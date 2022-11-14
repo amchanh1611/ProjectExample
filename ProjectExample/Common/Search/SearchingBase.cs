@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,14 +33,11 @@ namespace ProjectExample.Persistence.SearchBase
                 if (propertyFromSourc is null)
                     continue;
 
-                if (propertyFromSourc.PropertyType == typeof(ICollection<>))
-                    continue;
-
                 if (propertyFromSourc.PropertyType != typeof(string))
                     continue;
+
                 querySearchBuilder = querySearchBuilder.Append($"{propertyFromSourc.Name.ToString()}.Contains(\"{propertyFromQuery[1]}\"), "); 
             }    
-
 
             string querySearch = querySearchBuilder.ToString().TrimEnd(',',' ');
 
