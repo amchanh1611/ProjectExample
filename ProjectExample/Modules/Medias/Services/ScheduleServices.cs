@@ -61,28 +61,26 @@ namespace ProjectExample.Modules.Medias.Services
 
         public PaggingResponse<Schedule> GetSchedules(GetScheduleRequest request)
         {
-            IQueryable<Schedule> schedules = repository.Schedule.FindAll();
-
-            if (request.DateFrom != null || request.DateTo != null)
-            {
-                schedules = repository.Schedule.FindByCondition
+            IQueryable<Schedule> schedules = repository.Schedule.FindByCondition(x =>
+                ( request.MediaId == null
+                 ||
+                 x.MediaId == request.MediaId
+                )
+                &&
                 (
-                    x => (x.DateStart <= request.DateFrom || (x.DateStart >= request.DateFrom && x.DateStart <= request.DateTo))
-                    &&
-                    ((x.DateEnd <= request.DateTo && x.DateEnd >= request.DateFrom) || x.DateEnd >= request.DateTo)
-                );
-            }
-
-            if(request.MediaId != null)
-            {
-                schedules = repository.Schedule.FindByCondition(x => x.MediaId == request.MediaId);
-            }
-
+                    request.DateFrom == null
+                    || request.DateTo == null
+                    ||
+                    (
+                        (x.DateStart <= request.DateFrom || (x.DateStart >= request.DateFrom && x.DateStart <= request.DateTo))
+                        &&
+                        ((x.DateEnd <= request.DateTo && x.DateEnd >= request.DateFrom) || x.DateEnd >= request.DateTo)
+                    )
+                )
+            );
             if(request.InfoSearch != null)
             {
-                schedules = SearchingBase<Schedule>.ApplySearch(schedules, 
-                    (x => x.DateStart.ToString().Contains(request.InfoSearch) 
-                    || (x.DateEnd.ToString().Contains(request.InfoSearch))));
+                schedules = SearchingBase<Schedule>.ApplySearch(schedules,request.InfoSearch);
             }
 
             schedules = SortingBase<Schedule>.ApplySort(schedules, request.OrderBy);

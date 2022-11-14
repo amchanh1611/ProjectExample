@@ -5,6 +5,7 @@ namespace ProjectExample.Modules.Medias.Requests
 {
     public abstract class CreateOrUpdateScheduleRequest
     {
+        public int? Id { get; set; }
         public DateTime? DateStart { get; set; }
         public DateTime? DateEnd { get; set; }
         public TimeSpan? TimeStart { get; set; }
@@ -32,7 +33,9 @@ namespace ProjectExample.Modules.Medias.Requests
             RuleFor(x => x).Must((request) =>
             {
                 return repository.Schedule.FindByCondition(z =>
-                    (
+                    (z.Id != request.Id)    
+                &&
+                    ((
                         z.DateStart <= request.DateStart && z.DateEnd >= request.DateStart
                         || z.DateStart <= request.DateEnd && z.DateEnd >= request.DateEnd
                     )
@@ -40,7 +43,8 @@ namespace ProjectExample.Modules.Medias.Requests
                     (
                         z.TimeStart <= request.TimeStart && z.TimeEnd >= request.TimeStart
                         || z.TimeStart <= request.TimeEnd && z.TimeEnd >= request.TimeEnd
-                    )
+                    ))
+                    
                 ).Count() == 0;
             }).WithMessage("There is a schedule during this time");
 

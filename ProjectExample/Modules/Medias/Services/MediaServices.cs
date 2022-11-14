@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProjectExample.Common.Extentions;
 using ProjectExample.Modules.Medias.Entities;
 using ProjectExample.Modules.Medias.Requests;
@@ -7,6 +8,7 @@ using ProjectExample.Modules.Medias.Response;
 using ProjectExample.Modules.Medias.Response.Override;
 using ProjectExample.Persistence.PaggingBase;
 using ProjectExample.Persistence.Repositories;
+using ProjectExample.Persistence.SearchBase;
 
 namespace ProjectExample.Modules.Medias.Services
 {
@@ -15,7 +17,7 @@ namespace ProjectExample.Modules.Medias.Services
         Task<bool> AddAsync(CreateMediaRequest mediaRequest);
         List<ComboboxMedia> ComboboxMedia();
         bool Update(int id, UpdateMediaRequest mediaRequest);
-        PaggingResponse<Media> Search(GetMediaRequest request);
+        PaggingResponse<Media> GetMedia(GetMediaRequest request);
         
     }
 
@@ -45,12 +47,12 @@ namespace ProjectExample.Modules.Medias.Services
             return mapper.Map<List<Media>,List<ComboboxMedia>>(media);
         }
 
-        public PaggingResponse<Media> Search(GetMediaRequest request)
+        public PaggingResponse<Media> GetMedia(GetMediaRequest request)
         {
-            PaggingResponse<Media> medias = PaggingBase<Media>.ApplyPaging(repository.Media.FindAll(), request.CurrentPage, request.PageSize);
-
-           
-            return new PaggingResponse<Media>(medias.Data,medias.PageInfo);
+            IQueryable<Media> medias = repository.Media.FindAll().Include(x=>x.Schedules);
+            if(request.InfoSearch != null)
+                medias = SearchingBase<Media>.ApplySearch(medias, request.InfoSearch);
+            return PaggingBase<Media>.ApplyPaging(repository.Media.FindAll(), request.CurrentPage, request.PageSize); ;
         }
 
         public bool Update(int id, UpdateMediaRequest mediaRequest)

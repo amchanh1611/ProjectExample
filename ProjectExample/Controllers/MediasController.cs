@@ -50,7 +50,7 @@ namespace ProjectExample.Controllers
         [HttpGet("Search")]
         public IActionResult Search([FromQuery] GetMediaRequest request)
         {
-            PaggingResponse<Media> result = mediaServices.Search(request);
+            PaggingResponse<Media> result = mediaServices.GetMedia(request);
             if (result != null)
                 return Ok(result);
             return BadRequest();
