@@ -9,6 +9,7 @@ using ProjectExample.Modules.Medias.Response.Override;
 using ProjectExample.Persistence.PaggingBase;
 using ProjectExample.Persistence.Repositories;
 using ProjectExample.Persistence.SearchBase;
+using ProjectExample.Persistence.Sort;
 
 namespace ProjectExample.Modules.Medias.Services
 {
@@ -52,6 +53,7 @@ namespace ProjectExample.Modules.Medias.Services
             IQueryable<Media> medias = repository.Media.FindAll().Include(x=>x.Schedules);
             if(request.InfoSearch != null)
                 medias = SearchingBase<Media>.ApplySearch(medias, request.InfoSearch);
+            medias = SortingBase<Media>.ApplySort(medias, request.OrderBy);
             return PaggingBase<Media>.ApplyPaging(repository.Media.FindAll(), request.CurrentPage, request.PageSize); ;
         }
 
