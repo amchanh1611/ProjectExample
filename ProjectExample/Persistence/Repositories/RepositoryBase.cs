@@ -14,7 +14,7 @@ namespace ProjectExample.Persistence.Repositories
             this.context = context;
         }
 
-        public void Create(T entity) => context.Set<T>().Add(entity);
+        public T Create(T entity) => context.Set<T>().Add(entity).Entity;
 
         public void Delete(T entity) => context.Set<T>().Remove(entity);
 
@@ -23,7 +23,7 @@ namespace ProjectExample.Persistence.Repositories
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
             => context.Set<T>().Where(expression).AsNoTracking();
 
-        public void Update(T entity) => context.Set<T>().Update(entity);
+        public T Update(T entity) => context.Set<T>().Update(entity).Entity;
     }
 
     public class MediaRepository : RepositoryBase<Media>, IMediaRepository
@@ -43,8 +43,8 @@ namespace ProjectExample.Persistence.Repositories
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private ApplicationDbContext context;
-        private IMediaRepository media;
-        private IScheduleRepository schedule;
+        private IMediaRepository? media;
+        private IScheduleRepository? schedule;
 
         public RepositoryWrapper(ApplicationDbContext context)
         {

@@ -1,19 +1,18 @@
 ﻿using Humanizer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectExample.Modules.Medias.Entities;
-
 
 namespace ProjectExample.Persistence.Contexts
 {
-    public class ApplicationDbContext :DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-
         }
+
         public DbSet<Media> medias { get; set; }
         public DbSet<Schedule> schedules { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Media>(entityTypeBuilder =>

@@ -7,8 +7,8 @@ namespace ProjectExample.Persistence.Repositories
     {
         IQueryable<T> FindAll();
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
-        void Create(T entity);
-        void Update(T entity);
+        T Create(T entity);
+        T Update(T entity);
         void Delete(T entity);
     }
     public interface IMediaRepository : IRepositoryBase<Media>

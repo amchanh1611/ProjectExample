@@ -1,18 +1,5 @@
 cách triển khai theo Generic object V
 khi nao trien khai tren class khi nao trien khai tren method
 
-sửa connectionString V
-
-httpclient()
-
-sua search collection
-
-tim lich co media ten gi
-
-cach gui email bang code
-hien tai co cac cach gui mail thong dung nao
 
 https://mailtrap.io/blog/send-emails-with-gmail-api/
-
-clientId:     634932227060-2cdka612v49ginvt7mq7no4v79m5d80r.apps.googleusercontent.com
-clientSerect: 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
