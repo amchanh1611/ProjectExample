@@ -10,6 +10,9 @@ namespace ProjectExample.Modules.Medias.Entities
         public string File { get; set; } = default!;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public MediaStatus Status { get; set; } = MediaStatus.Active;
+
+        [NotMapped]
+        public string[] Sample { get; set; }
         public ICollection<Schedule>? Schedules { get; set; } 
     }
     public enum MediaStatus
